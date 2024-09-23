@@ -41,7 +41,13 @@ contract NFTMarketPlace {
         require(price > 0, "Price must be greater than zero");
 
         // Approve the marketplace contract to transfer the NFT
-        // nftContract.approve(address(this), tokenId);
+        
+        // **Add a check for approval**
+        require(
+            nftContract.getApproved(tokenId) == address(this) || 
+            nftContract.isApprovedForAll(msg.sender, address(this)),
+            "Marketplace not approved to transfer this NFT"
+        );
 
         // Add the NFT to the marketplace listings
         allListings[tokenId] = Listing(nftAddress, tokenId, msg.sender, price);
